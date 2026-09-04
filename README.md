@@ -34,13 +34,13 @@ OpenAPI.
 Pinned release tarball (no git needed at install time, works in `node:*-alpine` images):
 
 ```bash
-npm install https://github.com/mjaniko/kafkaui/releases/download/v0.1.3/kafkaui-0.1.3.tgz
+npm install https://github.com/mjaniko/kafkaui/releases/download/v0.1.4/kafkaui-0.1.4.tgz
 ```
 
 Or as a git dependency, when git is available:
 
 ```bash
-npm install github:mjaniko/kafkaui#v0.1.3
+npm install github:mjaniko/kafkaui#v0.1.4
 ```
 
 From a clone:
@@ -73,19 +73,24 @@ wrote kafka-docs.html
 ## Serving the UI from a NestJS app
 
 ```ts
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import { KafkaDocsModule } from 'kafkaui';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // after your KafkaTopic decorators have been processed
-  const asyncapi = JSON.parse(readFileSync(join(__dirname, '..', 'asyncapi.json'), 'utf8'));
-  KafkaDocsModule.setup('/kafka-docs', app, asyncapi);
+  SwaggerModule.setup('api/docs', app, SwaggerModule.createDocument(app, config));
+  KafkaDocsModule.setup('/kafka-docs', app);   // after your KafkaTopic decorators are processed
 
   await app.listen(3000);
 }
+```
+
+`setup` reads `asyncapi.json` from the working directory, the file `kafkaui generate` writes. Pass a
+document or a path explicitly when it lives elsewhere:
+
+```ts
+KafkaDocsModule.setup('/kafka-docs', app, { documentPath: join(__dirname, '..', 'asyncapi.json') });
+KafkaDocsModule.setup('/kafka-docs', app, asyncapiDocument);
 ```
 
 | Route | Content |
@@ -108,7 +113,7 @@ Without a generated document it still serves the consumers discovered at runtime
 Options:
 
 ```ts
-KafkaDocsModule.setup('/kafka-docs', app, asyncapi, {
+KafkaDocsModule.setup('/kafka-docs', app, {
   topicMetadataKey: '__kafka-topic-candidate', // key your decorator uses
   resolve: (envVar) => process.env[envVar],     // custom name resolution
   service: 'core',                              // label for runtime-discovered operations

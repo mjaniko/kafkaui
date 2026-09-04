@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KafkaDocsModule = void 0;
+const fs_1 = require("fs");
+const path_1 = require("path");
 const html_1 = require("./html");
 const DEFAULT_KEY = '__kafka-topic-candidate';
 // reflect-metadata is an optional peer; every NestJS app loads it, but the package must not require it.
@@ -12,19 +14,22 @@ const NEST_PATTERN_KEY = 'microservices:pattern';
 /**
  * Swagger-style docs for the Kafka contract of a running NestJS app.
  *
+ *   KafkaDocsModule.setup('/kafka-docs', app);
+ *
  *   GET <path>       → HTML viewer
  *   GET <path>-json  → AsyncAPI JSON
  *
- * Consumers are discovered from the decorators on the live controllers
- * (`@KafkaTopic`, `@KafkaCron`, or the MessagePattern they were rewritten
- * into), so the served document always lists the topics this pod is bound to,
- * with names resolved from the live config. The compile-time document from
- * `kafka-docs generate` adds producers and payload schemas; every channel in
- * it is re-resolved against the live config too.
+ * Loads `asyncapi.json` from the working directory (the file `kafkaui generate`
+ * writes) when present, then adds the consumers discovered from the decorators
+ * on the live controllers and resolves every topic name from the live config.
+ * Works with both the Express and Fastify adapters.
  */
 class KafkaDocsModule {
-    static setup(path, app, document, options = {}) {
-        const doc = enrich(app, document, options);
+    static setup(path, app, documentOrOptions, options = {}) {
+        const isDoc = (x) => !!x && typeof x === 'object' && 'asyncapi' in x;
+        const opts = isDoc(documentOrOptions) ? { ...options, document: documentOrOptions } : { ...(documentOrOptions ?? {}), ...options };
+        const document = opts.document ?? loadDocument(opts.documentPath ?? (0, path_1.join)(process.cwd(), 'asyncapi.json'));
+        const doc = enrich(app, document, opts);
         const adapter = app.getHttpAdapter();
         const html = (0, html_1.renderHtml)(doc);
         const json = JSON.stringify(doc);
@@ -44,6 +49,16 @@ class KafkaDocsModule {
     }
 }
 exports.KafkaDocsModule = KafkaDocsModule;
+function loadDocument(file) {
+    if (!(0, fs_1.existsSync)(file))
+        return undefined;
+    try {
+        return JSON.parse((0, fs_1.readFileSync)(file, 'utf8'));
+    }
+    catch {
+        return undefined;
+    }
+}
 function makeResolver(app, options) {
     if (options.resolve)
         return options.resolve;

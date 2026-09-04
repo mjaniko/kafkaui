@@ -1,6 +1,6 @@
 {
   "name": "kafkaui",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Swagger UI for Kafka: AsyncAPI generation and a live viewer for NestJS services",
   "license": "MIT",
   "main": "dist/index.js",
