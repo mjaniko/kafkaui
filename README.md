@@ -34,13 +34,13 @@ OpenAPI.
 From GitHub:
 
 ```bash
-npm install github:mjaniko1/kafkaui
+npm install github:mjaniko/kafkaui
 ```
 
 From a clone:
 
 ```bash
-git clone https://github.com/mjaniko1/kafkaui.git
+git clone https://github.com/mjaniko/kafkaui.git
 cd kafkaui && npm install && npm run build
 ```
 
