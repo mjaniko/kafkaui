@@ -1,6 +1,6 @@
 {
   "name": "kafkaui",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Swagger UI for Kafka: AsyncAPI generation and a live viewer for NestJS services",
   "license": "MIT",
   "main": "dist/index.js",
@@ -20,8 +20,7 @@
   },
   "peerDependencies": {
     "@nestjs/common": ">=9",
-    "@nestjs/core": ">=9",
-    "reflect-metadata": ">=0.1.13"
+    "@nestjs/core": ">=9"
   },
   "peerDependenciesMeta": {
     "@nestjs/common": {
@@ -29,17 +28,13 @@
     },
     "@nestjs/core": {
       "optional": true
-    },
-    "reflect-metadata": {
-      "optional": true
     }
   },
   "dependencies": {
     "typescript": "^5.2.0"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "reflect-metadata": "^0.2.2"
+    "@types/node": "^20.0.0"
   },
   "repository": {
     "type": "git",

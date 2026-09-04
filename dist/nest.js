@@ -1,9 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KafkaDocsModule = void 0;
-require("reflect-metadata");
 const html_1 = require("./html");
 const DEFAULT_KEY = '__kafka-topic-candidate';
+// reflect-metadata is an optional peer; every NestJS app loads it, but the package must not require it.
+const metadata = (key, target) => {
+    const R = Reflect;
+    return R.getMetadata ? R.getMetadata(key, target) : undefined;
+};
 const NEST_PATTERN_KEY = 'microservices:pattern';
 /**
  * Swagger-style docs for the Kafka contract of a running NestJS app.
@@ -83,8 +87,8 @@ function discoverConsumers(app, options) {
                     const fn = proto[name];
                     if (typeof fn !== 'function')
                         continue;
-                    const envVar = Reflect.getMetadata(key, fn);
-                    const pattern = Reflect.getMetadata(NEST_PATTERN_KEY, fn);
+                    const envVar = metadata(key, fn);
+                    const pattern = metadata(NEST_PATTERN_KEY, fn);
                     if (!envVar && !pattern)
                         continue;
                     const id = `${proto.constructor.name}.${name}`;

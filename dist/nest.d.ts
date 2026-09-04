@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { AsyncApiDoc } from './asyncapi';
 /** Structural subset of INestApplication so @nestjs/* stay optional peers. */
 interface HttpAdapterLike {

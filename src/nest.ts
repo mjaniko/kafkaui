@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { AsyncApiDoc, AsyncApiOperation } from './asyncapi';
 import { renderHtml } from './html';
 
@@ -23,6 +22,11 @@ export interface KafkaDocsOptions {
 }
 
 const DEFAULT_KEY = '__kafka-topic-candidate';
+// reflect-metadata is an optional peer; every NestJS app loads it, but the package must not require it.
+const metadata = (key: string, target: object): unknown => {
+  const R = Reflect as unknown as { getMetadata?: (k: string, t: object) => unknown };
+  return R.getMetadata ? R.getMetadata(key, target) : undefined;
+};
 const NEST_PATTERN_KEY = 'microservices:pattern';
 
 /**
@@ -105,8 +109,8 @@ function discoverConsumers(app: NestAppLike, options: KafkaDocsOptions): Discove
           if (name === 'constructor') continue;
           const fn = proto[name];
           if (typeof fn !== 'function') continue;
-          const envVar = Reflect.getMetadata(key, fn) as string | undefined;
-          const pattern = Reflect.getMetadata(NEST_PATTERN_KEY, fn) as unknown;
+          const envVar = metadata(key, fn) as string | undefined;
+          const pattern = metadata(NEST_PATTERN_KEY, fn);
           if (!envVar && !pattern) continue;
           const id = `${proto.constructor.name}.${name}`;
           if (seen.has(id)) continue;
