@@ -34,7 +34,7 @@ section>header h3{margin:0;font-family:ui-monospace,Menlo,monospace;font-size:14
 .model .brace{color:var(--muted)}
 .hidden{display:none}code{background:var(--code);padding:1px 4px;border-radius:3px;font-size:12px}
 @media(max-width:820px){.layout{grid-template-columns:1fr}nav{position:static;height:auto;max-height:40vh}main{padding:16px}}
-</style></head><body><div class="layout"><nav><input id="q" type="search" placeholder="filter channels"><div id="list"></div></nav><main><h1>${escape(doc.info.title)}</h1><p class="sub">${escape(doc.info.description ?? '')} Generated ${escape(doc['x-generated-at'])}.</p><div id="chs"></div></main></div>
+</style></head><body><div class="layout"><nav><input id="q" type="search" placeholder="filter channels"><div id="list"></div></nav><main><h1>${escape(doc.info.title)}</h1><p class="sub">${escape(doc.info.description ?? '')} Rendered ${new Date().toISOString().slice(0, 16).replace('T', ' ')} UTC.</p><div id="chs"></div></main></div>
 <script>
 const DOC=${data};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));

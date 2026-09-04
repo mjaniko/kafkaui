@@ -15,7 +15,7 @@ export interface AsyncApiDoc {
             payload: JsonSchema;
         }>;
     };
-    'x-generated-at': string;
+    'x-generated-at'?: string;
 }
 export interface AsyncApiChannel {
     address: string | null;

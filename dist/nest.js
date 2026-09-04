@@ -116,7 +116,7 @@ function enrich(app, document, options) {
     const resolve = makeResolver(app, options);
     const doc = document ? JSON.parse(JSON.stringify(document)) : {
         asyncapi: '3.0.0', info: { title: options.service ?? 'app', version: '0.0.0', description: 'Kafka contract discovered at runtime.' },
-        channels: {}, operations: {}, components: { schemas: {}, messages: {} }, 'x-generated-at': new Date().toISOString(),
+        channels: {}, operations: {}, components: { schemas: {}, messages: {} },
     };
     const service = options.service ?? doc.info.title;
     for (const ch of Object.values(doc.channels)) {
@@ -145,6 +145,5 @@ function enrich(app, document, options) {
         };
         doc.operations[`runtime.${c.className}.${c.method}`] = op;
     }
-    doc['x-generated-at'] = new Date().toISOString();
     return doc;
 }

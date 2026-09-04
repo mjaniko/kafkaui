@@ -6,7 +6,7 @@ export interface AsyncApiDoc {
   channels: Record<string, AsyncApiChannel>;
   operations: Record<string, AsyncApiOperation>;
   components: { schemas: Record<string, JsonSchema>; messages: Record<string, { name: string; payload: JsonSchema }> };
-  'x-generated-at': string;
+  'x-generated-at'?: string;
 }
 
 export interface AsyncApiChannel {
@@ -38,7 +38,6 @@ export function toAsyncApi(doc: ServiceDoc): AsyncApiDoc {
     channels: {},
     operations: {},
     components: { schemas: { ...doc.schemas }, messages: {} },
-    'x-generated-at': doc.generatedAt,
   };
   for (const op of doc.operations) {
     const cid = channelId(op);
@@ -66,8 +65,8 @@ export function toAsyncApi(doc: ServiceDoc): AsyncApiDoc {
  */
 export function mergeAsyncApi(docs: AsyncApiDoc[], title = 'Promofy event bus'): AsyncApiDoc {
   const out: AsyncApiDoc = {
-    asyncapi: '3.0.0', info: { title, version: new Date().toISOString().slice(0, 10) },
-    channels: {}, operations: {}, components: { schemas: {}, messages: {} }, 'x-generated-at': new Date().toISOString(),
+    asyncapi: '3.0.0', info: { title, version: docs.map((d) => `${d.info.title}@${d.info.version}`).join(', ') },
+    channels: {}, operations: {}, components: { schemas: {}, messages: {} },
   };
   // A service that never declares a name for a var still meets the one that does:
   // first pass collects env var → address across all docs.

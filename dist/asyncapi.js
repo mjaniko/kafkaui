@@ -12,7 +12,6 @@ function toAsyncApi(doc) {
         channels: {},
         operations: {},
         components: { schemas: { ...doc.schemas }, messages: {} },
-        'x-generated-at': doc.generatedAt,
     };
     for (const op of doc.operations) {
         const cid = channelId(op);
@@ -40,8 +39,8 @@ function toAsyncApi(doc) {
 function mergeAsyncApi(docs, title = 'Promofy event bus') {
     var _a;
     const out = {
-        asyncapi: '3.0.0', info: { title, version: new Date().toISOString().slice(0, 10) },
-        channels: {}, operations: {}, components: { schemas: {}, messages: {} }, 'x-generated-at': new Date().toISOString(),
+        asyncapi: '3.0.0', info: { title, version: docs.map((d) => `${d.info.title}@${d.info.version}`).join(', ') },
+        channels: {}, operations: {}, components: { schemas: {}, messages: {} },
     };
     // A service that never declares a name for a var still meets the one that does:
     // first pass collects env var → address across all docs.

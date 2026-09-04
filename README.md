@@ -34,13 +34,13 @@ OpenAPI.
 Pinned release tarball (no git needed at install time, works in `node:*-alpine` images):
 
 ```bash
-npm install https://github.com/mjaniko/kafkaui/releases/download/v0.1.2/kafkaui-0.1.2.tgz
+npm install https://github.com/mjaniko/kafkaui/releases/download/v0.1.3/kafkaui-0.1.3.tgz
 ```
 
 Or as a git dependency, when git is available:
 
 ```bash
-npm install github:mjaniko/kafkaui#v0.1.2
+npm install github:mjaniko/kafkaui#v0.1.3
 ```
 
 From a clone:
